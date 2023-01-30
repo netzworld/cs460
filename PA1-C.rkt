@@ -36,3 +36,9 @@
 (and a b) ; L2 returns the smallest number if both negative.
 ; L2 returned -43 when (and -1 -43) was inputted. Strange.
 
+; Test3: OR
+(TEST (or 0 1) #t 1 #t) ;L1 does not accept numerical boolean values and throws errors
+(TEST (or 1 1) #t 1 #t) ;L1 does not accept numerical boolean values and throws errors.
+(TEST (or #t #t) #t #t #t)
+(TEST (or #f #f) #f #f #f)
+(TEST (or #f #t) #t #t #t)
