@@ -1,1 +1,4 @@
 # cs460
+
+This functional collaborative environment for the CS 460 Programming languages course is intended to allow for sharing ideas.
+
