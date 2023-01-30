@@ -1,21 +1,20 @@
 #lang mystery-languages/arithmetic
-; N. Randazzo PA1
+; N. Randazzo & M. Vitullo PA1
 
 ; Arithmetic Writeup
 ; +, -, *, /: L1 and L3 do integer addition, L2 adds a floating point.
 ; Divide by zero: L1 and L3 return a failure, L2 defines it as +infinity with a floating point
-; All of the equality comparisons are the same, even with variables
-
-; Conditionals Writeup
+; All of the equality and comparison operations are the same, even with variables
 
 ; === ALL TEST CASES ===
+
 ; Test1: Basic arithmetic
 (TEST (+ 1 2) 3 3.0 3)
 (TEST (- 2 1) 1 1.0 1)
 (TEST ( * 3 3) 9 9.0 9)
 (TEST (/ 90 10) 9 9.0 9)
 
-; *Test2: Divide by Zero
+; *Test2: Divide by Zero Arithmetic
 (TEST (/ 1 0) failure +inf.0 failure)
 
 ; Test3: Equality Comparisons
