@@ -2,9 +2,11 @@
 ; N. Randazzo & M. Vitullo PA1
 
 ; Arithmetic Writeup
-; +, -, *, /: L1 and L3 do integer addition, L2 adds a floating point.
+; +, -, *, /: L1 and L3 do integer addition, L2 adds a floating point. L2 defaults to floating point
+; L3 only results in a floating point if one is used in the operation.
 ; Divide by zero: L1 and L3 return a failure, L2 defines it as +infinity with a floating point
 ; All of the equality and comparison operations are the same, even with variables
+; All +, -, *, / operations are the same with variables as with constants
 
 ; === ALL TEST CASES ===
 
