@@ -2,9 +2,14 @@
 ; N. Randazzo & M. Vitullo PA1
 
 ;Conditional Writeup
-; IF
+; IF: Very straight forward. No major discrepancies between languages.
+
+
 ; AND: L1 requires #t and #f, while L2 and L3 work with both constant numbers (0/1) and #t/#f.
-; L2 also returns the larger of the two numbers if they are both positive, and the smaller of the two if they are both negative.
+;
+
+;OR: L1 again requires only #t and #f, will throw errors if integers or floats are used. L2 will return a float
+; if a float is used, otherwise will return an integer
 
 ; === ALL TEST CASES ===
 
@@ -17,6 +22,7 @@
 (defvar x -4)
 (defvar c 1)
 
+
 ; TEST 1: Boolean AND Expressions:
 
 ;     Test 1a: AND with Constants -> 2 True Constants
@@ -28,17 +34,8 @@
 ;     *Test 1c: AND with Intger Representation of Boolean Values -> 2 True Integers
 (TEST (and 1 1) "error" 1 #t) ; Language One does not accept numerical boolean values and throws an error
 
-;     *TEST 1c: AND with Integer Representation of Boolean Values -> 1 True Integer and 1 False Integer
-(TEST (and 0 1) "error" 1 #f) ; Language Two says that 1 False and 1 True is True
-
 ;     *Test 1d: Using Variables that are equivalent
 (TEST (and a c) "error" 1 #t) ; Language One does not accept numerical boolean values and throws an error
-
-;     *Test 1e: Using Variables that are different
-(TEST (and a b) "error" -43 #t)
-
-;     *TEST 1f: Using Variables with Negative Integer Values that are Different
-(TEST (and b x) "error" -4 #t)
 
 ; TEST 2: Boolean OR Expressions:
 
@@ -62,3 +59,9 @@
 
 ;     3b: If true or flase then 1 else 2
 (TEST (if (or #t #f) 1 2) 1 1 1)
+
+;     3c: If with an AND statement, with false prediction
+(TEST (if (and #t #f) #t #f) #f #f #f)
+
+;     3d: If with a nested If statement
+(TEST (if (if #f #t #f) #t #f) #f #f #f) 
