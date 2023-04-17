@@ -47,3 +47,16 @@ void AssignmentStatement::print() {
     _rhsExpression->print();
     std::cout << std::endl;
 }
+
+void PrintStatement::print(){
+    //std::cout << varName;
+
+}
+
+PrintStatement::PrintStatement(std::string name){
+    varName = name;
+}
+
+void PrintStatement::evaluate(SymTab &symTab){
+   std::cout << symTab.getValueFor(varName) << std::endl;
+}
