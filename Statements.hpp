@@ -62,4 +62,19 @@ private:
     ExprNode *_rhsExpression;
 };
 
+
+class PrintStatement : public Statement {
+public:
+    PrintStatement();
+    PrintStatement(std::string varName);
+
+    virtual void print();
+    virtual void evaluate(SymTab &symTab);
+
+private:
+    std::string varName;
+
+
+};
+
 #endif //APYTHONINTERPRETER_STATEMENTS_HPP
