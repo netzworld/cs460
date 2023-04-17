@@ -31,8 +31,6 @@ public:
     bool isSubtractionOperator() const    { return _symbol == '-'; }
     bool isModuloOperator() const         { return _symbol == '%'; }
     bool isDivisionOperator() const       { return _symbol == '/'; }
-    bool isLessThanOperator() const { return _symbol == '<';  }
-    bool isGreaterThanOperator() const { return _symbol == '>'; }
     bool isArithmeticOperator() const {
         return isMultiplicationOperator() ||
                isAdditionOperator() ||
@@ -40,7 +38,8 @@ public:
                isModuloOperator() ||
                isDivisionOperator();
     }
-
+    bool isLessThanOperator() const { return _symbol == '<';  }
+    bool isGreaterThanOperator() const { return _symbol == '>'; }
     bool isLessEqualOperator() const { return relationalOp == "<="; }
     bool isGreaterEqualOperator() const { return relationalOp == ">="; }
     bool isEqualRelationalOperator() const { return relationalOp == "==";  }
@@ -57,12 +56,27 @@ public:
         _wholeNumber = n;
         isWholeNumber() = true;
     }
+    bool isKeyword() {
+        if(_name == "for" || _name == "print")
+            return true;
+        return false; 
+
+    }
+    bool isPrint(){
+        return _name == "print";
+    }
+    bool isFor(){
+        return _name == "for";
+    }
 
     void setRelationalOp(std::string op){
         relationalOp = op;
     }
     std::string getRelationalOp(){
         return relationalOp;
+    }
+     bool isRelationalOp(){
+        return isLessEqualOperator() || isLessThanOperator() || isGreaterEqualOperator() || isGreaterThanOperator() || isEqualRelationalOperator() || isNotEqualRelationalOperator();
     }
 
     void print() const;
@@ -74,6 +88,7 @@ private:
     bool _isWholeNumber;
     char _symbol;
     int _wholeNumber;
+    std::string _keyword;
 };
 
 
