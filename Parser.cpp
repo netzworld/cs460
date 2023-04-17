@@ -33,12 +33,22 @@ Statements *Parser::statements() {
 
     Statements *stmts = new Statements();
     Token tok = tokenizer.getToken();
-    while (tok.isName()) {
-        tokenizer.ungetToken();
-        AssignmentStatement *assignStmt = assignStatement();
-        stmts->addStatement(assignStmt);
+    // this needs to change from just isName to (isName or isKeyword).
+    while(tok.isName() || tok.isKeyword() ){
+        if(tok.isPrint()){
+            tokenizer.ungetToken();
+            PrintStatement *printstatmt = print();
+            stmts->addStatement(printstatmt);
+        }
+        else {
+            tokenizer.ungetToken();
+            AssignmentStatement *assignStmt = assignStatement();
+            stmts->addStatement(assignStmt);
+        }
         tok = tokenizer.getToken();
     }
+
+
     tokenizer.ungetToken();
     return stmts;
 }
@@ -91,6 +101,7 @@ ExprNode *Parser::expr() {
 }
 
 
+
 ExprNode *Parser::term() {
     // This function parses the grammar rules:
 
@@ -101,7 +112,8 @@ ExprNode *Parser::term() {
     ExprNode *left = primary();
     Token tok = tokenizer.getToken();
 
-    while (tok.isMultiplicationOperator() || tok.isDivisionOperator() || tok.isModuloOperator()) {
+    while (tok.isMultiplicationOperator() || tok.isDivisionOperator() || 
+    tok.isModuloOperator() || tok.isRelationalOp() ) {
         InfixExprNode *p = new InfixExprNode(tok);
         p->left() = left;
         p->right() = primary();
@@ -135,4 +147,18 @@ ExprNode *Parser::primary() {
     die("Parser::primary", "Unexpected token", tok);
 
     return nullptr;  // Will not reach this statement!
+}
+
+PrintStatement *Parser::print() {
+    Token tok = tokenizer.getToken();
+    if(!tok.isPrint()){
+        exit(1);
+    }
+    Token idTok = tokenizer.getToken();
+    if(!idTok.isName()){
+        die("Parser::print", "Expected name tok, got", idTok);
+    }
+    std::cout << "some debug bullshit: " << idTok.getName() << std::endl;
+    PrintStatement *printstatmt = new PrintStatement(idTok.getName());
+    return printstatmt;
 }
