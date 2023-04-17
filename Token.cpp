@@ -20,7 +20,7 @@ void Token::print() const {
     else if( isModuloOperator() )  std::cout << " % " ;
     else if( isDivisionOperator() )  std::cout << " / " ;
     else if (isLessEqualOperator())
-        std::cout << "<= ";
+        std::cout << " <= ";
     else if (isGreaterEqualOperator())
         std::cout << " >= ";
     else if (isEqualRelationalOperator())
