@@ -33,12 +33,17 @@ Statements *Parser::statements() {
 
     Statements *stmts = new Statements();
     Token tok = tokenizer.getToken();
-    // this needs to change from just isName to (isName or isKeyword).
+
     while(tok.isName() || tok.isKeyword() ){
         if(tok.isPrint()){
             tokenizer.ungetToken();
             PrintStatement *printstatmt = print();
             stmts->addStatement(printstatmt);
+        }
+        else if (tok.isFor()){
+            tokenizer.ungetToken();
+            ForLoop *forloop = forLoop();
+            stmts->addStatement(forloop);
         }
         else {
             tokenizer.ungetToken();
@@ -76,6 +81,10 @@ AssignmentStatement *Parser::assignStatement() {
     //if (!tok.isSemiColon())
     //    die("Parser::assignStatement", "Expected a semicolon, instead got", tok);
 
+    Token tok = tokenizer.getToken();
+    if(!tok.eol() || tok.eof())
+        die("Parse::assignStatement", "Expected a newline, instead got", tok);
+    
     return new AssignmentStatement(varName.getName(), rightHandSideExpr);
 }
 
@@ -89,7 +98,7 @@ ExprNode *Parser::expr() {
 
     ExprNode *left = term();
     Token tok = tokenizer.getToken();
-    while (tok.isAdditionOperator() || tok.isSubtractionOperator()) {
+    while (tok.isAdditionOperator() || tok.isSubtractionOperator() || tok.isEqualRelation()) {
         InfixExprNode *p = new InfixExprNode(tok);
         p->left() = left;
         p->right() = term();
@@ -156,9 +165,78 @@ PrintStatement *Parser::print() {
     }
     Token idTok = tokenizer.getToken();
     if(!idTok.isName()){
-        die("Parser::print", "Expected name tok, got", idTok);
+        die("Parser::print", "Expected name tok, got ", idTok);
     }
-    std::cout << "some debug bullshit: " << idTok.getName() << std::endl;
+    Token nl = tokenizer.getToken();
+    if(!nl.eol() || !nl.eof()){
+        die("Parser::print", "Expected a newline, got", nl);
+    }
+
     PrintStatement *printstatmt = new PrintStatement(idTok.getName());
     return printstatmt;
+}
+
+ForLoop *Parser::forLoop(){
+    Token tok = tokenizer.getToken();
+    if(!tok.isFor()){
+        exit(1);
+    }
+    Token parenTok = tokenizer.getToken();
+    if(!parenTok.isOpenParen()){
+        die("Parser::forLoop", "Expected open paren, got ", parenTok);
+    }
+    AssignmentStatement *starting = assignStatement(); // i, (=) 0
+    
+    Token semi = tokenizer.getToken(); // get ;
+
+    if(!semi.isSemiColon()){
+        die("Parser::forLoop", "Expected semicolon, got ", parenTok);
+    }
+    // std::cout << "Token print: ";
+    // semi.print();
+    // std::cout << std::endl;
+    
+    // std::cout << "comparison: ";
+    ExprNode *comparison = expr(); // gets conditional
+
+    semi = tokenizer.getToken(); // ;
+    if(!semi.isSemiColon()){
+        die("Parser::forLoop", "Expected semicolon, got ", parenTok);
+    }
+    // std::cout << "Token: ";
+    // semi.print(); 
+    // std::cout << std::endl;
+    Token nl = tokenizer.getToken();
+
+    AssignmentStatement *change = assignStatement(); // gets increment or decrement assign statement
+    
+    parenTok = tokenizer.getToken();
+    if(!parenTok.isCloseParen()){
+        die("Parser::forLoop", "Expected close paren, got ", parenTok);
+    }
+
+    // std::cout << "line 219: ";
+    // parenTok.print();
+    // std::cout << std::endl;
+
+    Token bracket = tokenizer.getToken();
+    if(!bracket.isOpenBracket()){
+        die("Parser::forLoop", "Expected open bracket, got ", parenTok);
+    }
+
+    // std::cout << "line 228: ";
+    // bracket.print();
+    // std::cout << std::endl;
+
+    Statements *body_statements = statements();
+    // std::cout << "trying to print statements: ";
+    // body_statements->print();
+    bracket = tokenizer.getToken();
+    if(!bracket.isCloseBracket()){
+        die("Parser::forLoop", "Expected closed bracket, got ", parenTok);
+    } 
+
+    ForLoop *loop = new ForLoop(starting, comparison, change, body_statements);
+
+    return loop;
 }
