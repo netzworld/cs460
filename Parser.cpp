@@ -163,12 +163,13 @@ PrintStatement *Parser::print() {
     if(!tok.isPrint()){
         exit(1);
     }
+
     Token idTok = tokenizer.getToken();
     if(!idTok.isName()){
         die("Parser::print", "Expected name tok, got ", idTok);
     }
     Token nl = tokenizer.getToken();
-    if(!nl.eol() || !nl.eof()){
+    if(!nl.eol() || nl.eof()){
         die("Parser::print", "Expected a newline, got", nl);
     }
 
@@ -227,15 +228,18 @@ ForLoop *Parser::forLoop(){
     // std::cout << "line 228: ";
     // bracket.print();
     // std::cout << std::endl;
+    bracket = tokenizer.getToken();
 
     Statements *body_statements = statements();
     // std::cout << "trying to print statements: ";
     // body_statements->print();
+   
+
     bracket = tokenizer.getToken();
     if(!bracket.isCloseBracket()){
         die("Parser::forLoop", "Expected closed bracket, got ", parenTok);
     } 
-
+    bracket = tokenizer.getToken();
     ForLoop *loop = new ForLoop(starting, comparison, change, body_statements);
 
     return loop;
