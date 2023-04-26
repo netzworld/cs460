@@ -46,13 +46,13 @@ Token Tokenizer::getToken() {
     }
 
     char c;
-    /*
+    
     while( inStream.get(c) && isspace(c) && c != '\n' )  // Skip spaces but not new-line chars.
         ;
-    */
+    
 
-    while( inStream.get(c) && isspace(c) )  // Skip spaces including the new-line chars.
-        ;
+    // while( inStream.get(c) && isspace(c) )  // Skip spaces including the new-line chars.
+    //     ;
 
     if(inStream.bad()) {
         std::cout << "Error while reading the input stream in Tokenizer.\n";
@@ -157,6 +157,10 @@ Token Tokenizer::getToken() {
             std::cout << "Unknown character in input. ->" << c << "<-" << std::endl;
             exit(1);
         }
+    }
+    else if (c == '{' || c == '}')
+    {
+        token.symbol(c);
     }
     else {
         std::cout << "Unknown character in input. ->" << c << "<-" << std::endl;
