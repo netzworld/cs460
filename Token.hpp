@@ -69,6 +69,14 @@ public:
         return _name == "for";
     }
 
+    bool isOpenBracket() const {
+        return _symbol == '{';
+    }
+    
+    bool isCloseBracket() const {
+        return _symbol == '}';
+    }
+
     void setRelationalOp(std::string op){
         relationalOp = op;
     }
@@ -76,7 +84,10 @@ public:
         return relationalOp;
     }
      bool isRelationalOp(){
-        return isLessEqualOperator() || isLessThanOperator() || isGreaterEqualOperator() || isGreaterThanOperator() || isEqualRelationalOperator() || isNotEqualRelationalOperator();
+        return isLessEqualOperator() || isLessThanOperator() || isGreaterEqualOperator() || isGreaterThanOperator();
+    }
+    bool isEqualRelation(){
+        return isEqualRelationalOperator() || isNotEqualRelationalOperator();
     }
 
     void print() const;
@@ -88,7 +99,6 @@ private:
     bool _isWholeNumber;
     char _symbol;
     int _wholeNumber;
-    std::string _keyword;
 };
 
 
