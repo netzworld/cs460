@@ -23,11 +23,12 @@ public:
     Statements *statements();
 
     AssignmentStatement *assignStatement();
+    PrintStatement* print();
+    ForLoop* forLoop();
 
     ExprNode *expr();
     ExprNode *term();
     ExprNode *primary();
-    ExprNode *relterm();
 
     std::string id();
 
@@ -35,7 +36,7 @@ private:
     Tokenizer &tokenizer;
 
     void die(std::string where, std::string message, Token &token);
-    PrintStatement* print();
+    
 
 };
 
