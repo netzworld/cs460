@@ -77,4 +77,21 @@ private:
 
 };
 
+class ForLoop : public Statement,public Statements {
+public:
+    ForLoop();
+    ForLoop(AssignmentStatement *start, 
+            ExprNode *rel_expr, AssignmentStatement *change, Statements *body_loop);
+
+    virtual void print();
+    virtual void evaluate(SymTab &symTab);
+
+private:
+    AssignmentStatement* starting;
+    ExprNode* expr;
+    AssignmentStatement* changer;
+    Statements *_body;   
+
+};
+
 #endif //APYTHONINTERPRETER_STATEMENTS_HPP
