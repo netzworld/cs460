@@ -10,6 +10,7 @@ Statement::Statement() {}
 // Statements
 
 Statements::Statements() {}
+
 void Statements::addStatement(Statement *statement) { _statements.push_back(statement); }
 
 void Statements::print() {
@@ -60,3 +61,25 @@ PrintStatement::PrintStatement(std::string name){
 void PrintStatement::evaluate(SymTab &symTab){
    std::cout << symTab.getValueFor(varName) << std::endl;
 }
+
+ForLoop::ForLoop(AssignmentStatement *start, ExprNode *rel_expr, AssignmentStatement *change, Statements *body_loop){
+    starting = start;
+    expr = rel_expr;
+    changer = change;
+    _body = body_loop;
+
+}
+
+void ForLoop::print(){}
+
+void ForLoop::evaluate(SymTab &symTab){
+    starting->evaluate(symTab);
+ 
+  while(expr->evaluate(symTab)){
+    _body->evaluate(symTab);
+    changer->evaluate(symTab);
+  }
+  
+}
+
+// a samurai and a spartan
