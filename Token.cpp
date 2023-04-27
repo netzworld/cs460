@@ -21,20 +21,20 @@ void Token::print() const {
     else if( isSubtractionOperator() )  std::cout << " - " ;
     else if( isModuloOperator() )  std::cout << " % " ;
     else if( isDivisionOperator() )  std::cout << " / " ;
-    else if (isLessEqualOperator())
-        std::cout << " <= ";
-    else if (isGreaterEqualOperator())
-        std::cout << " >= ";
-    else if (isEqualRelationalOperator())
-        std::cout << " == ";
-    else if (isLessThanOperator())
-        std::cout << " < ";
-    else if ( isGreaterThanOperator())
-        std::cout << " > ";
-    else if (isNotEqualRelationalOperator())
-        std::cout << " != ";
-    else if (isName())
-        std::cout << getName();
+    else if ( isIntDivisionOperator()) std::cout << " // ";
+    else if ( isGreaterThanOperator())std::cout << " > ";
+    else if ( isGreaterEqualOperator()) std::cout << " >= ";
+    else if ( isLessThanOperator()) std::cout << " < ";
+    else if ( isLessEqualOperator()) std::cout << " <= ";
+    else if ( isEqualRelationalOperator()) std::cout << " == ";
+    else if ( isNotEqualRelationalOperator()) std::cout << " != ";
+    else if ( isAltInequalityOperator()) std::cout << "<>";
+    else if ( isPeriod()) std::cout << ".";
+    else if ( isKeyword() ) std::cout << getName();
+    else if ( isName()) std::cout << getName() << " ";
     else if( isWholeNumber() ) std::cout << getWholeNumber();
+    else if ( isDouble()) std::cout << getDouble();
+    else if ( isString()) std::cout << '"' << getString() << '"';
+    else if ( isComment()) std::cout << getComment();
     else std::cout << "Uninitialized token.\n";
 }
