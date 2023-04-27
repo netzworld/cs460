@@ -28,6 +28,8 @@ private:
 private:
     std::string readName();
     int readInteger();
+    double readDouble(int left);
+    std::string readString(char end);
 };
 
 #endif //APYTHONINTERPRETER_TOKENIZER_HPP
