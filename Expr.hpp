@@ -16,12 +16,14 @@
 // It forces the derived classes (subclasses) to implement two functions, print and
 // evaluate.
 
+
+
 class ExprNode {
 public:
     explicit ExprNode(Token token);
     Token token();
     virtual void print() = 0;
-    virtual int evaluate(SymTab &symTab) = 0;
+    virtual TypeDescriptor* evaluate(SymTab &symTab) = 0;
 
 private:
     Token _token;
@@ -40,11 +42,13 @@ public:
     ExprNode *&left();
     ExprNode *&right();
     void print () override;
-    int evaluate(SymTab &symTab) override;
+    TypeDescriptor* evaluate(SymTab &symTab) override;
 
 private:
     ExprNode *_left, *_right;
 };
+
+
 
 // WholeNumber is a leaf-node in an expression tree. It corresponds to
 // a terminal in the production rules of the grammar that describes the
@@ -54,10 +58,10 @@ class WholeNumber: public ExprNode {
 public:
     explicit WholeNumber(Token token);
     void print() override;
-    int evaluate(SymTab &symTab) override;
+    TypeDescriptor* evaluate(SymTab &symTab) override;
 };
 
-// Varialbe is a leaf-node in an expression tree. It corresponds to
+// Variable is a leaf-node in an expression tree. It corresponds to
 // a terminal in the production rules of the grammar that describes the
 // syntax of arithmetic expressions.
 
@@ -65,8 +69,24 @@ class Variable: public ExprNode {
 public:
     explicit Variable(Token token);
     void print() override;
-    int evaluate(SymTab &symTab) override;
+    TypeDescriptor* evaluate(SymTab &symTab) override;
 };
 
+class Double : public ExprNode
+{
+public:
+    Double(Token token);
+    virtual void print();
+    virtual TypeDescriptor *evaluate(SymTab &symTab);
+};
+
+
+class String : public ExprNode
+{
+public:
+    String(Token token);
+    virtual void print();
+    virtual TypeDescriptor *evaluate(SymTab &symTab);
+};
 
 #endif //APYTHONINTERPRETER_Expr_HPP
