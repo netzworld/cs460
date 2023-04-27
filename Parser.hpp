@@ -26,9 +26,15 @@ public:
     PrintStatement* print();
     ForLoop* forLoop();
 
-    ExprNode *expr();
+    std::vector<ExprNode *> testlist();
+
+    ExprNode *arith_expr();
     ExprNode *term();
+    ExprNode *test();
+    ExprNode *comparison();
     ExprNode *primary();
+    ExprNode *factor();
+    ExprNode *atom(Token prev, int numHyphens);
 
     std::string id();
 
