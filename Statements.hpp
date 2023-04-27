@@ -49,17 +49,21 @@ private:
 class AssignmentStatement : public Statement {
 public:
     AssignmentStatement();
-    AssignmentStatement(std::string lhsVar, ExprNode *rhsExpr);
+    AssignmentStatement(ExprNode* lhsVar, ExprNode *rhsExpr);
+    AssignmentStatement(ExprNode *lhsExpr, std::vector<ExprNode *> rhsArray);
 
-    std::string &lhsVariable();
+    ExprNode *&lhsExpression();
     ExprNode *&rhsExpression();
+    std::vector<ExprNode *> rhsArray();
 
     virtual void evaluate(SymTab &symTab);
     virtual void print();
+    
 
 private:
-    std::string _lhsVariable;
+    ExprNode *_lhsVariable;
     ExprNode *_rhsExpression;
+    std::vector<ExprNode*> _rhsArray;
 };
 
 
