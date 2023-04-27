@@ -36,6 +36,39 @@ int Tokenizer::readInteger() {
     return intValue;
 }
 
+// Prev char was ., going to read the rest of digits
+double Tokenizer::readDouble(int left)
+{
+   
+    std::string s = std::to_string(left) + '.';
+    char c;
+    while (inStream.get(c) && isdigit(c))
+    {
+        s += c;
+    }
+    if (inStream.good()) 
+        inStream.putback(c);
+    return std::stod(s);
+}
+
+std::string Tokenizer::readString(char end)
+{
+
+    std::string s;
+    char c;
+    while (inStream.get(c) && c != end)
+    {
+        if (c == '\n' || inStream.eof())
+        {
+            std::cout << std::endl
+                      << "Tokenizer::readString EOL while scanning string literal" << std::endl;
+            exit(1);
+        }
+        s += c;
+    }
+    return s;
+}
+
 Tokenizer::Tokenizer(std::ifstream &stream): ungottenToken{false}, inStream{stream}, lastToken{} {}
 
 Token Tokenizer::getToken() {
@@ -50,10 +83,6 @@ Token Tokenizer::getToken() {
     while( inStream.get(c) && isspace(c) && c != '\n' )  // Skip spaces but not new-line chars.
         ;
     
-
-    // while( inStream.get(c) && isspace(c) )  // Skip spaces including the new-line chars.
-    //     ;
-
     if(inStream.bad()) {
         std::cout << "Error while reading the input stream in Tokenizer.\n";
         exit(1);
@@ -62,6 +91,7 @@ Token Tokenizer::getToken() {
     //    std::cout << "c = " << c << std::endl;
 
     Token token;
+
     if( inStream.eof()) {
         token.eof() = true;
     } else if( c == '\n' ) {  // will not ever be the case unless new-line characters are not supressed.
@@ -70,7 +100,18 @@ Token Tokenizer::getToken() {
         // put the digit back into the input stream so
         // we read the entire number in a function
         inStream.putback(c);
-        token.setWholeNumber( readInteger() );
+        int leftDig = readInteger();
+        inStream.get(c);
+
+        if(c == '.')
+        {
+            token.setDouble(readDouble(leftDig));
+        }
+        else 
+        {
+            inStream.putback(c);
+            token.setWholeNumber(leftDig);
+        }
 
     }
     else if (c == '=')
@@ -92,8 +133,17 @@ Token Tokenizer::getToken() {
             token.symbol('=');
         }
     }
-    else if( c == '+' || c == '-' || c == '*' || c == '/' || c == '%')
+    else if( c == '+' || c == '-' || c == '*' || c == '%')
         token.symbol(c);
+    else if( c == '/'){
+        inStream.get(c);
+        if(c == '/')
+            token.setRelationalOp("//");
+        else {
+            inStream.putback(c);
+            token.symbol('/');
+        }
+    }
     else if( c == ';' )
         token.symbol(c);
     else if( c == '(' || c == ')')
@@ -103,64 +153,37 @@ Token Tokenizer::getToken() {
         inStream.putback(c);
         token.setName( readName() );
     } 
-    else if (c == '<'){
-        inStream.putback(c);
-        std::string name;
+    else if(c == '>' || c == '<' || c == '!'){
+        char e1 = c;
         inStream.get(c);
-        name += c;
-        inStream.get(c);
-        if (c == '='){ // IS A <= OPERATOR
-            name += c;
-            // add token for that
-            token.setRelationalOp(name);
-        }
-        else{
+        if(e1 == '<' && c == '>')
+            token.setRelationalOp("<>");
+        else if (c == '=')
+            token.setRelationalOp(std::string(1,e1) + '=');
+        else {
             inStream.putback(c);
-            token.symbol('<');
-        }
-
-        
-    }
-    else if (c == '>'){
-        inStream.putback(c);
-        std::string name;
-        inStream.get(c);
-        name += c;
-        inStream.get(c);
-        if (c == '=')
-        { // IS A >= OPERATOR
-            name += c;
-            // add token for that
-            token.setRelationalOp(name);
-        }
-        else
-        {
-            inStream.putback(c);
-            token.symbol('>');
-        }
-    }
-    else if (c == '!')
-    {
-        inStream.putback(c);
-        std::string name;
-        inStream.get(c);
-        name += c;
-        inStream.get(c);
-        if (c == '=')
-        { // IS A == OPERATOR
-            name += c;
-            // add token for that
-            token.setRelationalOp(name);
-        }
-        else
-        {
-            std::cout << "Unknown character in input. ->" << c << "<-" << std::endl;
-            exit(1);
+            token.symbol(c);
         }
     }
     else if (c == '{' || c == '}')
     {
         token.symbol(c);
+    }
+    else if (c == '"')
+        token.setString(readString(c));
+    else if (c == '\'')
+        token.setString(readString(c));
+    else if (c == ',')
+        token.symbol(c);
+    else if (c == '.')
+        token.symbol(c);
+    else if (c == '#')
+    {
+        std::string comment = "#";
+        while (inStream.get(c) && c != '\n')
+            comment += c;
+        token.setComment(comment);
+        inStream.putback(c);
     }
     else {
         std::cout << "Unknown character in input. ->" << c << "<-" << std::endl;
